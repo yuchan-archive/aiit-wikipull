@@ -1,0 +1,4 @@
+div class="container-fluid"
+	div class="list-group"
+		- @wikis.each do |x|
+			a class="list-group-item" href="#{x['projectId']}/#{x['id']}" #{x['name']}

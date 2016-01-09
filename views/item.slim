@@ -1,0 +1,13 @@
+div class="container-fluid"
+	h1 #{@wiki['name']}
+
+	pre #{@wiki['content']}
+
+	div
+		ul
+			- @wiki['attachments'].each do |a|
+				li
+					a href="/#{@wiki['id']}/attachments/#{a['id']}" #image-#{a['id']}
+					br
+					a href="/#{@wiki['id']}/attachments/#{a['id']}"
+						img src="/#{@wiki['id']}/attachments/#{a['id']}"
