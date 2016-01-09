@@ -5,8 +5,8 @@ div class="container-fluid"
 	
 	pre #{@wiki['content']}
 
-	div class='media'
-		- @wiki['attachments'].each do |a|
+	- @wiki['attachments'].each do |a|
+		div class='media'
 			div class="media-left media-middle"
 				a href="/#{@wiki['id']}/attachments/#{a['id']}"
 					img src="/#{@wiki['id']}/attachments/#{a['id']}" width=64 height=64
