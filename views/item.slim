@@ -1,6 +1,8 @@
 div class="container-fluid"
 	h1 #{@wiki['name']}
 
+	a href="/#{@wiki['projectId']}" back to list
+	
 	pre #{@wiki['content']}
 
 	div class='media'

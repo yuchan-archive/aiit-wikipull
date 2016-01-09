@@ -21,6 +21,10 @@ def httprequest(url)
   response
 end
 
+get '/' do
+  redirect to("/1073850074")
+end
+
 get '/:projectid' do
   projectid = params['projectid'].to_s || '1073850074' #default is chubachi pt!!
   response = httprequest("https://aiit.backlog.jp/api/v2/wikis?projectIdOrKey=#{projectid}&apiKey=" + ENV["apiKey"])
