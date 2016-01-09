@@ -3,11 +3,9 @@ div class="container-fluid"
 
 	pre #{@wiki['content']}
 
-	div
-		ul
-			- @wiki['attachments'].each do |a|
-				li
-					a href="/#{@wiki['id']}/attachments/#{a['id']}" #image-#{a['id']}
-					br
-					a href="/#{@wiki['id']}/attachments/#{a['id']}"
-						img src="/#{@wiki['id']}/attachments/#{a['id']}"
+	div class='media'
+		- @wiki['attachments'].each do |a|
+			div class="media-left media-middle"
+				a href="/#{@wiki['id']}/attachments/#{a['id']}"
+					img src="/#{@wiki['id']}/attachments/#{a['id']}" width=64 height=64
+			div class="media-body" #image-#{a['id']}
