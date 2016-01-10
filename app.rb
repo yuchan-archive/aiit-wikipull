@@ -28,17 +28,29 @@ end
 
 get '/:projectid' do
   projectid = params['projectid'].to_s || '1073850074' #default is chubachi pt!!
-  response = httprequest("https://aiit.backlog.jp/api/v2/wikis?projectIdOrKey=#{projectid}&apiKey=" + ENV["apiKey"])
-  # Will print response.body
-  result = JSON.parse(response.body)
+  resultJson = $redis.get(projectid)
+  if resultJson.nil?
+    response = httprequest("https://aiit.backlog.jp/api/v2/wikis?projectIdOrKey=#{projectid}&apiKey=" + ENV["apiKey"])
+    # Will print response.body
+    resultJson = response.body
+    $redis.set(projectid, resultJson)
+    $redis.expire(projectid, 30)
+  end
+  result = JSON.parse(resultJson)
   @wikis = result.sort_by { |k| k["id"] }
   slim :list
 end
 
 get '/:projectid/:itemid' do
   itemid = params['itemid'].to_s
-  response = httprequest("https://aiit.backlog.jp/api/v2/wikis/#{itemid}?apiKey=" + ENV["apiKey"])
-  @wiki = JSON.parse(response.body)
+  resultJson = $redis.get(itemid)
+  if resultJson.nil?
+    response = httprequest("https://aiit.backlog.jp/api/v2/wikis/#{itemid}?apiKey=" + ENV["apiKey"])
+    resultJson = response.body
+    $redis.set(itemid, resultJson)
+    $redis.expire(itemid, 600)
+  end
+  @wiki = JSON.parse(resultJson)
   slim :item
 end
 
