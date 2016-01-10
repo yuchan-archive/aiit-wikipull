@@ -5,10 +5,11 @@ require "net/http"
 require "uri"
 require 'json'
 require 'slim'
-require 'fastimage'
+require 'redis'
 
 before do
   Dotenv.load
+  $redis = Redis.new(url: ENV["REDIS_URL"])
 end
 
 def httprequest(url)
@@ -44,8 +45,15 @@ end
 get '/:itemid/attachments/:attachmentid' do
   itemid = params['itemid'].to_s
   attachmentid = params['attachmentid'].to_s
-  response = httprequest("https://aiit.backlog.jp/api/v2/wikis/#{itemid}/attachments/#{attachmentid}?apiKey=" + ENV["apiKey"])
+  image = $redis.get(attachmentid)
+  if image.nil?
+    response = httprequest("https://aiit.backlog.jp/api/v2/wikis/#{itemid}/attachments/#{attachmentid}?apiKey=" + ENV["apiKey"])
+    $redis.set(attachmentid, response.body)
+    $redis.expire(attachmentid, 600)
+    image = response.body
+  end
+  
   headers \
   'Content-Type' => "image/png"
-  body response.body
+  body image 
 end
